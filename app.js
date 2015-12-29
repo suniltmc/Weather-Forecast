@@ -13,10 +13,20 @@ WeatherForecast.config(function($routeProvider){
 		});
 });
 
-WeatherForecast.controller('homeController', ['$scope', function($scope){
+WeatherForecast.service('cityService', function(){
+	this.city ="Hyderabad";
+})
+
+WeatherForecast.controller('homeController', ['$scope', 'cityService', function($scope, cityService){
+	$scope.city = cityService.city;
+
+	$scope.$watch('city', function(){
+		cityService.city = $scope.city;
+	})
 	
 }]);
 
-WeatherForecast.controller('forecastController', ['$scope', function($scope){
-	
+WeatherForecast.controller('forecastController', ['$scope', 'cityService', function($scope, cityService){
+	$scope.city = cityService.city;
 }]);
+
