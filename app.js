@@ -1,3 +1,4 @@
+//Creating a module and 
 var WeatherForecast = angular.module('WeatherForecast', ['ngRoute', 'ngResource']);
 
 //Routing
@@ -11,6 +12,11 @@ WeatherForecast.config(function($routeProvider){
 		.when('/forecast', {
 			templateUrl : 'template/forecast.html',
 			controller :'forecastController'
+		})
+
+		.when('/forecast/:days', {
+			templateUrl : 'template/forecast.html',
+			controller :'forecastController'
 		});
 });
 
@@ -20,8 +26,11 @@ WeatherForecast.service('cityService', function(){
 })
 
 //Controllers
-WeatherForecast.controller('homeController', ['$scope', 'cityService', function($scope, cityService){
+WeatherForecast.controller('homeController', ['$scope','$location', 'cityService', function($scope, $location, cityService){
 	$scope.city = cityService.city;
+	$scope.submit = function(){
+		$location.path("/forecast");
+	}
 
 	$scope.$watch('city', function(){
 		cityService.city = $scope.city;
@@ -29,14 +38,26 @@ WeatherForecast.controller('homeController', ['$scope', 'cityService', function(
 	
 }]);
 
-WeatherForecast.controller('forecastController', ['$scope', '$resource', 'cityService', function($scope, $resource, cityService){
+WeatherForecast.controller('forecastController', ['$scope', '$resource','$routeParams', 'cityService', function($scope, $resource,$routeParams, cityService){
 	$scope.city = cityService.city;
+	
+	$scope.days = $routeParams.days || '2';
 	$scope.weatherAPPID = '35eceb4011ce1121020cb39012dba9df'
 
 	$scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily", {callback:"JSON_CALLBACK"}, {get:{method: "JSONP"}});
 
-	$scope.weatherResult = $scope.weatherAPI.get({ q:$scope.city, cnt: 2, APPID : $scope.weatherAPPID })
+	$scope.weatherResult = $scope.weatherAPI.get({ q:$scope.city, cnt: $scope.days, APPID : $scope.weatherAPPID })
 
-	console.log($scope.weatherResult);
+	//console.log($scope.weatherResult);
+
+	$scope.convertTemparature = function(degK){
+
+		return Math.round((1.8 * (degK -273)) +32 );
+	};
+	$scope.convertDate = function(dt){
+		return new Date(dt*1000)
+	}
 }]);
+
+
 
