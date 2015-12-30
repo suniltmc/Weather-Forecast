@@ -20,6 +20,23 @@ WeatherForecast.config(function($routeProvider){
 		});
 });
 
+//Directives
+
+WeatherForecast.directive("weatherreport", function(){
+	return{
+		restrict: 'E',
+		templateUrl : 'directives/weatherreport.html',
+		replace: true,
+		scope : {
+			weatherDay : "=",
+			convertToStandard: "&",
+			convertToDate : "&",
+			dateFormat : "@"
+
+		}
+	}
+})
+
 //Services
 WeatherForecast.service('cityService', function(){
 	this.city ="New York";
@@ -39,19 +56,14 @@ WeatherForecast.controller('homeController', ['$scope','$location', 'cityService
 }]);
 
 WeatherForecast.controller('forecastController', ['$scope', '$resource','$routeParams', 'cityService', function($scope, $resource,$routeParams, cityService){
-	$scope.city = cityService.city;
 	
+	$scope.city = cityService.city;
 	$scope.days = $routeParams.days || '2';
 	$scope.weatherAPPID = '35eceb4011ce1121020cb39012dba9df'
-
 	$scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily", {callback:"JSON_CALLBACK"}, {get:{method: "JSONP"}});
-
 	$scope.weatherResult = $scope.weatherAPI.get({ q:$scope.city, cnt: $scope.days, APPID : $scope.weatherAPPID })
 
-	//console.log($scope.weatherResult);
-
 	$scope.convertTemparature = function(degK){
-
 		return Math.round((1.8 * (degK -273)) +32 );
 	};
 	$scope.convertDate = function(dt){
