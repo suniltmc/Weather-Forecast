@@ -14,7 +14,7 @@ As of now I'm using a simple python server to run the app.
 
 Boom!! the app should be up and running!
 
-`` There will be more updates comming in to the app ``
+`` There will be more updates to the app ``
 
 
 
