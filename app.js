@@ -1,7 +1,7 @@
-//Creating a module and 
+//Creating a module
 var WeatherForecast = angular.module('WeatherForecast', ['ngRoute', 'ngResource']);
 
-//Routing
+//Routing to pages 
 WeatherForecast.config(function($routeProvider){
 	$routeProvider
 		.when('/', {
@@ -60,6 +60,7 @@ WeatherForecast.controller('forecastController', ['$scope', '$resource','$routeP
 	$scope.city = cityService.city;
 	$scope.days = $routeParams.days || '2';
 	$scope.weatherAPPID = '35eceb4011ce1121020cb39012dba9df'
+	//API link has been obtained by hte openweathermap.org
 	$scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily", {callback:"JSON_CALLBACK"}, {get:{method: "JSONP"}});
 	$scope.weatherResult = $scope.weatherAPI.get({ q:$scope.city, cnt: $scope.days, APPID : $scope.weatherAPPID })
 
